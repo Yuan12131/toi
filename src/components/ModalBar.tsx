@@ -1,31 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import Modal from 'react-modal';
-import DatePicker from 'react-datepicker';
-import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
-import { Button } from '@mui/material';
+import React, { useState } from "react";
+import Modal from "react-modal";
+import { Button } from "@mui/material";
+import CalendarSelector from "./Calender";
+import PlaceSelector from "./Place";
+import ThemeSelector from "./Theme";
 
-const ModalBar = () => {
-  const [isOpen, setIsOpen] = useState(true); // 모달창 열림 여부
-  const [selectedDate, setSelectedDate] = useState(null); // 선택된 날짜
-  const [selectedPlace, setSelectedPlace] = useState(null); // 선택된 장소
-  const [selectedThemes, setSelectedThemes] = useState([]); // 선택된 테마
+interface ModalBarProps {
+  onSubmit: (data: {
+    startDate: Date | null;
+    endDate: Date | null;
+    selectedPlaces: string[];
+    selectedThemes: string;
+  }) => void;
+}
+
+const ModalBar: React.FC<ModalBarProps> = ({ onSubmit }) => {
+  const [isOpen, setIsOpen] = useState(true);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [selectedPlaces, setSelectedPlaces] = useState<any[]>([]);
+  const [selectedThemes, setSelectedThemes] = useState<string>("");
 
   const handleClose = () => {
-    // 모달창 닫기
     setIsOpen(false);
-  };
-
-  const handleSendDataToAPI = () => {
-    // API 요청 및 응답 처리
-    // 예: fetch를 사용하여 API에 요청하고 응답을 콘솔에 출력
-    fetch('/api/gpt3', {
-      method: 'POST',
-      body: JSON.stringify({
-        date: selectedDate,
-        place: selectedPlace,
-        themes: selectedThemes,
-      }),
-    }).then((response) => response.json()).then((data) => console.log(data));
+    onSubmit({
+      startDate,
+      endDate,
+      selectedPlaces,
+      selectedThemes,
+    });
   };
 
   return (
@@ -38,33 +41,29 @@ const ModalBar = () => {
       <p>여행 계획을 세우기 위해 다음 정보를 입력해주세요.</p>
       <div>
         <label htmlFor="date">날짜 선택:</label>
-        <DatePicker
-          id="date"
-          selected={selectedDate}
-          onChange={(date) => setSelectedDate(date)}
-        />
+        <div>
+          <CalendarSelector
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+          />
+        </div>
       </div>
       <div>
         <label htmlFor="place">장소 검색:</label>
-        <GooglePlacesAutocomplete
-          id="place"
-          apiKey="YOUR_API_KEY"
-          selectProps={{
-            value: selectedPlace,
-            onChange: setSelectedPlace,
-          }}
+        <PlaceSelector
+          selectedPlaces={selectedPlaces}
+          setSelectedPlaces={setSelectedPlaces}
         />
       </div>
       <div>
-        <label htmlFor="themes">테마 선택:</label>
-        <input type="checkbox" name="theme" value="healing" id="healing" />
-        <label htmlFor="healing">힐링</label>
-        <input type="checkbox" name="theme" value="nature" id="nature" />
-        <label htmlFor="nature">자연</label>
-        <input type="checkbox" name="theme" value="city" id="city" />
-        <label htmlFor="city">도시</label>
+        <ThemeSelector
+          selectedThemes={selectedThemes}
+          setSelectedThemes={setSelectedThemes}
+        />
       </div>
-      <Button variant="contained" onClick={handleSendDataToAPI}>
+      <Button variant="contained" onClick={handleClose}>
         완료
       </Button>
     </Modal>
