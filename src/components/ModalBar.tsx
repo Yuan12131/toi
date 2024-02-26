@@ -23,6 +23,10 @@ const ModalBar: React.FC<ModalBarProps> = ({ onSubmit }) => {
   const [selectedThemes, setSelectedThemes] = useState<string>("");
 
   const handleComplete = () => {
+    if (step === 3 && selectedThemes === "") {
+      alert("테마를 선택해주세요.");
+      return; // Don't proceed further if the theme is not selected
+    }
     setIsOpen(false);
     onSubmit({
       startDate,
@@ -32,8 +36,36 @@ const ModalBar: React.FC<ModalBarProps> = ({ onSubmit }) => {
     });
   };
 
+  // 각 단계에 따라 필요한 정보가 선택되었는지 확인하는 함수
+  const validateCurrentStep = () => {
+    switch (step) {
+      case 1:
+        return startDate !== null && endDate !== null;
+      case 2:
+        return selectedPlaces.length > 0;
+      case 3:
+        return selectedThemes !== "";
+      default:
+        return true; // 다른 단계에서는 항상 true 반환
+    }
+  };
+
   const handleNextStep = () => {
-    setStep((prevStep) => prevStep + 1);
+    // 현재 단계에 필요한 정보가 선택되었는지 확인
+    const isCurrentStepValid = validateCurrentStep();
+
+    if (isCurrentStepValid) {
+      setStep((prevStep) => prevStep + 1);
+    } else {
+      switch (step) {
+        case 1:
+          alert("날짜를 선택해주세요.");
+          break;
+        case 2:
+          alert("장소를 선택해주세요.");
+          break;
+      }
+    }
   };
 
   const handlePreviousStep = () => {
@@ -70,10 +102,17 @@ const ModalBar: React.FC<ModalBarProps> = ({ onSubmit }) => {
     }
   };
 
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
   return (
-    <Modal isOpen={true} contentLabel="여행 계획 설정">
+    <Modal isOpen={isOpen} contentLabel="여행 계획 설정">
       <h2>여행 계획 설정 - 단계 {step}</h2>
       <p>여행 계획을 세우기 위해 다음 정보를 입력해주세요.</p>
+      <Button variant="contained" onClick={handleClose}>
+        닫기
+      </Button>
       {renderStep()}
       <div>
         {step > 1 && (
