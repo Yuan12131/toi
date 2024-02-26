@@ -15,7 +15,8 @@ const CalendarSelector: React.FC<CalenderSelectorProps> = ({
   endDate,
   setEndDate,
 }) => {
-  
+  const [currentDate, setCurrentDate] = useState(new Date());
+
   const handleSelect = (date: any) => {
     if (!startDate) {
       setStartDate(date);
@@ -27,12 +28,35 @@ const CalendarSelector: React.FC<CalenderSelectorProps> = ({
     }
   };
 
+  const tileDisabled = ({ date, view }: any) => {
+    const today = new Date();
+
+    if (view === 'month' && date < today) {
+      return true;
+    }
+
+    if (startDate && view === 'month') {
+      // 7일 이상 차이나는 날짜는 선택 불가능
+      const daysDiff = Math.abs((date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+      if (daysDiff >= 7) {
+        return true;
+      }
+
+      // 종료날짜는 시작날짜보다 우선일 수 없음
+      if (endDate && date <= endDate) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   return (
     <div>
       <Calendar
-        value={startDate || endDate}
+        value={currentDate}
         onChange={handleSelect}
         showNavigation={true}
+        tileDisabled={tileDisabled}
       />
       {startDate && <p>시작일: {startDate.toLocaleDateString()}</p>}
       {endDate && <p>종료일: {endDate.toLocaleDateString()}</p>}
