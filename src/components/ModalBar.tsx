@@ -12,11 +12,12 @@ interface ModalBarProps {
     selectedPlaces: string[];
     selectedThemes: string;
   }) => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const ModalBar: React.FC<ModalBarProps> = ({ onSubmit }) => {
+const ModalBar: React.FC<ModalBarProps> = ({ onSubmit, isOpen, onClose }) => {
   const [step, setStep] = useState(1);
-  const [isOpen, setIsOpen] = useState(true);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [selectedPlaces, setSelectedPlaces] = useState<any[]>([]);
@@ -27,7 +28,7 @@ const ModalBar: React.FC<ModalBarProps> = ({ onSubmit }) => {
       alert("테마를 선택해주세요.");
       return; // Don't proceed further if the theme is not selected
     }
-    setIsOpen(false);
+    onClose();
     onSubmit({
       startDate,
       endDate,
@@ -103,8 +104,10 @@ const ModalBar: React.FC<ModalBarProps> = ({ onSubmit }) => {
   };
 
   const handleClose = () => {
-    setIsOpen(false);
+    onClose();
   };
+
+  Modal.setAppElement(document.body);
 
   return (
     <Modal isOpen={isOpen} contentLabel="여행 계획 설정">

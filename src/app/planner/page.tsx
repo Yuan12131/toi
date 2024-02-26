@@ -1,20 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import ModalBar from "@/components/ModalBar";
-import GptAI from "./gpt";
 
 const Planner = () => {
-  const [isOpen, setIsOpen] = useState(true); // 모달창 열림 여부
+  const [isOpen, setIsOpen] = useState(true);
   const [modalData, setModalData] = useState<any>(null);
   const [response, setResponse] = useState("");
-
-  useEffect(() => {
-    setIsOpen(true);
-  }, []);
-
-  const handleOpenModal = () => {
-    setIsOpen(true);
-  };
 
   const handleModalSubmit = async (data: any) => {
     // 받아온 데이터를 상태에 저장
@@ -24,7 +15,7 @@ const Planner = () => {
   const handleAskQuestion = async () => {
     // modalData 값 확인
     if (!modalData) {
-      console.error("modalData is null");
+      alert("날짜, 장소, 테마를 선택한 후 확인할 수 있습니다.");
       return;
     }
 
@@ -67,11 +58,19 @@ const Planner = () => {
     }
   };
 
+const handleOpenModal = () => {
+    setIsOpen(true); // 모달창 열기
+  };
+
+  const handleCloseModal = () => {
+    setIsOpen(false); // 모달창 닫기
+  };
+
   return (
     <>
-      <ModalBar onSubmit={handleModalSubmit} />
-      <button onClick={handleOpenModal}>모달창 열기</button>
-      <button onClick={handleAskQuestion}>결과 확인</button>
+      {isOpen && <ModalBar onSubmit={handleModalSubmit} isOpen={isOpen} onClose={handleCloseModal}/>}
+      <button onClick={handleOpenModal}>여행 정보 입력하기</button>
+      <button onClick={handleAskQuestion}>여행 코스 확인하기</button>
       <div className="ml-10">
         <h2>답변:</h2>
         <p className="h-96 w-80 border">{response}</p>
