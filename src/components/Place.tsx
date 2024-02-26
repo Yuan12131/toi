@@ -7,12 +7,12 @@ interface PlaceSelectorProps {
 }
 
 const PlaceSelector: React.FC<PlaceSelectorProps> = ({selectedPlaces, setSelectedPlaces}) => {
-  const [searchValue, setSearchValue] = useState("");
+  const [value, setValue] = useState(null);
 
   const handleSelect = (place: any) => {
     // 선택된 장소 정보 처리
     setSelectedPlaces((prevPlaces: any) => [...prevPlaces, place]);
-    setSearchValue("");
+    setValue(null);
   };
 
   return (
@@ -24,6 +24,7 @@ const PlaceSelector: React.FC<PlaceSelectorProps> = ({selectedPlaces, setSelecte
         selectProps={{
           onChange: handleSelect,
           placeholder: "방문할 국가나 도시를 검색하세요",
+          value
         }}
       />
 
