@@ -15,13 +15,14 @@ interface ModalBarProps {
 }
 
 const ModalBar: React.FC<ModalBarProps> = ({ onSubmit }) => {
+  const [step, setStep] = useState(1);
   const [isOpen, setIsOpen] = useState(true);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [selectedPlaces, setSelectedPlaces] = useState<any[]>([]);
   const [selectedThemes, setSelectedThemes] = useState<string>("");
 
-  const handleClose = () => {
+  const handleComplete = () => {
     setIsOpen(false);
     onSubmit({
       startDate,
@@ -31,41 +32,65 @@ const ModalBar: React.FC<ModalBarProps> = ({ onSubmit }) => {
     });
   };
 
-  return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={handleClose}
-      contentLabel="여행 계획 설정"
-    >
-      <h2>여행 계획 설정</h2>
-      <p>여행 계획을 세우기 위해 다음 정보를 입력해주세요.</p>
-      <div>
-        <label htmlFor="date">날짜 선택:</label>
-        <div>
+  const handleNextStep = () => {
+    setStep((prevStep) => prevStep + 1);
+  };
+
+  const handlePreviousStep = () => {
+    setStep((prevStep) => Math.max(1, prevStep - 1));
+  };
+
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return (
           <CalendarSelector
             startDate={startDate}
             setStartDate={setStartDate}
             endDate={endDate}
             setEndDate={setEndDate}
           />
-        </div>
-      </div>
+        );
+      case 2:
+        return (
+          <PlaceSelector
+            selectedPlaces={selectedPlaces}
+            setSelectedPlaces={setSelectedPlaces}
+          />
+        );
+      case 3:
+        return (
+          <ThemeSelector
+            selectedThemes={selectedThemes}
+            setSelectedThemes={setSelectedThemes}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <Modal isOpen={true} contentLabel="여행 계획 설정">
+      <h2>여행 계획 설정 - 단계 {step}</h2>
+      <p>여행 계획을 세우기 위해 다음 정보를 입력해주세요.</p>
+      {renderStep()}
       <div>
-        <label htmlFor="place">장소 검색:</label>
-        <PlaceSelector
-          selectedPlaces={selectedPlaces}
-          setSelectedPlaces={setSelectedPlaces}
-        />
+        {step > 1 && (
+          <Button variant="contained" onClick={handlePreviousStep}>
+            이전
+          </Button>
+        )}
+        {step < 3 ? (
+          <Button variant="contained" onClick={handleNextStep}>
+            다음
+          </Button>
+        ) : (
+          <Button variant="contained" onClick={handleComplete}>
+            완료
+          </Button>
+        )}
       </div>
-      <div>
-        <ThemeSelector
-          selectedThemes={selectedThemes}
-          setSelectedThemes={setSelectedThemes}
-        />
-      </div>
-      <Button variant="contained" onClick={handleClose}>
-        완료
-      </Button>
     </Modal>
   );
 };
