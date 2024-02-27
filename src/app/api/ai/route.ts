@@ -21,14 +21,13 @@ export async function POST(req:NextRequest) {
         messages: [{ role: 'user', content: userQuestion }],
         stream: true,
         temperature : 1.0,
-        max_tokens : 500,
+        max_tokens : 1000,
       });
 
       let result = '';
       for await (const chunk of stream) {
         result += chunk.choices[0]?.delta?.content || "";
       }
-      console.log('OpenAI 응답:', result); // 응답을 로그에 출력
 
       return NextResponse.json({result}, {status:200})
   }
