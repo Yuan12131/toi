@@ -75,25 +75,25 @@ const Planner = () => {
       // result 문자열을 JSON으로 파싱
       const parsedResult = JSON.parse(result);
       // place_ids를 담을 배열
-      const placeIds: string[] = [];
+      const placeNames: string[] = [];
 
       for (const dateKey in parsedResult) {
         const dateObj = parsedResult[dateKey];
         if (Array.isArray(dateObj)) {
           for (const event of dateObj) {
-            if (event && event.place_id) {
-              placeIds.push(event.place_id);
+            if (event && event.place_name) {
+              placeNames.push(event.place_name);
             }
           }
         }
       }
 
-      console.log(placeIds);
+      console.log(placeNames);
 
       const placeDetails = await Promise.allSettled(
-        placeIds.map(async (place_id) => {
+        placeNames.map(async (place_name) => {
           try {
-            const response = await fetch(`/api/place-detail?placeId=${place_id}`, {
+            const response = await fetch(`/api/place-detail?placeName=${place_name}`, {
               method: 'GET',
             });
       
