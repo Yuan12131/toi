@@ -9,13 +9,13 @@ function Topbar() {
     <div className={styles.topbar}>
       <div>
         <Link href="/">
-          <button>TOUI</button>
+          <div>TOUI</div>
         </Link>
       </div>
 
       <div>
         <Link href="/login">
-          <button>LOGIN</button>
+          <div>LOGIN</div>
         </Link>
       </div>
     </div>
