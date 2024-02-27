@@ -18,7 +18,7 @@ const PlaceSelector: React.FC<PlaceSelectorProps> = ({selectedPlaces, setSelecte
   return (
     <div>
       <GooglePlacesAutocomplete
-        apiKey="AIzaSyCZy50I036EZDc-Lsu5EdEoUzdblq8WdHc"
+        apiKey="AIzaSyDpnJtXd385DDjiz4Ow0KFzAA05cUtd3nA"
         minLengthAutocomplete={2}
         autocompletionRequest={{ types: ["country", "locality"] }}
         selectProps={{
