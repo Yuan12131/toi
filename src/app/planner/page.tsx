@@ -1,7 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import ModalBar from "@/components/ModalBar";
-import { getPlaceDetails } from "@/utils/googlePlacesAPI";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 interface Place {
   place_id: string;
@@ -47,7 +49,7 @@ const Planner = () => {
       .join(", ");
 
     const question =
-      "다음 날짜, 장소, 테마를 기반으로 첫날부터 마지막날까지 일정을 JSON 형식으로 여행코스를 생성해서 객체만 응답해주세요. 일정은 동선을 고려해서 일자마다 시간으로 나누어 최상위 객체를 날짜별 yyyy-mm-dd로 나누고, 배열 속 객체들로 이루어진 time, google map에 등록된 place_id, place_name으로 나타내주세요. 또한, place_id의 값은 실제로 존재하는 구글 플레이스에서 검색 가능한 장소 이름이며, 구글 리뷰가 많거나 인기 있는 장소 중심이어야 합니다.";
+      "다음 날짜, 장소, 테마를 기반으로 첫날부터 마지막날까지 일정을 JSON 형식으로 여행코스를 생성해서 객체만 응답해주세요. 일정은 동선을 고려해서 일자마다 시간으로 나누어 최상위 객체를 날짜별 yyyy-mm-dd로 나누고, 배열 속 객체들로 이루어진 time, google place api에 등록된 place_id, place_name으로 나타내주세요. 또한, place_id의 값은 실제로 존재하는 구글 플레이스에서 검색 가능한 장소 이름이며, 구글 리뷰가 많거나 인기 있는 장소 중심이어야 합니다.";
 
     const combinedQuestion = `${question} 
     시작일: ${startDate}, 종료일: ${endDate}, 
@@ -87,6 +89,28 @@ const Planner = () => {
       }
 
       console.log(placeIds);
+
+      const placeDetails = await Promise.allSettled(
+        placeIds.map(async (place_id) => {
+          try {
+            const response = await fetch(`/api/place-detail?placeId=${place_id}`, {
+              method: 'GET',
+            });
+      
+            if (!response.ok) {
+              throw new Error('Failed to fetch place details');
+            }
+      
+            const data = await response.json();
+            return data;
+          } catch (error) {
+            console.error(error);
+            return { error }; // 에러 객체 반환
+          }
+        })
+      );
+      
+      console.log(placeDetails);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
