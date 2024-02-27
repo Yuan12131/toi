@@ -107,8 +107,6 @@ const ModalBar: React.FC<ModalBarProps> = ({ onSubmit, isOpen, onClose }) => {
     onClose();
   };
 
-  Modal.setAppElement(document.body);
-
   return (
     <Modal isOpen={isOpen} contentLabel="여행 계획 설정">
       <h2>여행 계획 설정 - 단계 {step}</h2>
