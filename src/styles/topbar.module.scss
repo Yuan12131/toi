@@ -1,5 +1,30 @@
-.topbar{
-  width:100vw;
+.topbar {
+  width: 100vw;
   height: 10vh;
-  background-color: beige;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: fixed;
+  z-index: 1000;
+
+  >div:nth-child(1) {
+    width: 80vw;
+    justify-content: flex-start;
+    display: flex;
+    font-size: 2rem;
+    padding-left: 10vw;
+    >a{
+      color: #96B6C5;
+      text-decoration: none;
+    }
+  }
+
+  >div:nth-child(2) {
+    width: 20vw;
+    >a{
+      text-decoration: none;
+      color: black;
+    }
+  }
 }
