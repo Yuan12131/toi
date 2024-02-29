@@ -1,0 +1,40 @@
+.close{
+  width: 35px;
+  height: 35px;
+  background-color: white;
+  border: 1px solid black;
+  font-size: 1.3rem;
+  font-weight: 400;
+  border-radius: 5px;
+  position: relative;
+  left: 31vw;
+  cursor: pointer;
+  bottom: 2vh;
+}
+.step{
+  font-size: 2rem;
+  color: white;
+  width: 17vw;
+  height: 9vh;
+  line-height: 9vh;
+  background-color: #ADC4CE;
+  text-align: center;
+  border-radius: 10px;
+  margin: -7vh 0 2vh 0;
+}
+.title{
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 3vh;
+}
+.next, .prev, .submit{
+  width: 80px;
+  height: 40px;
+  border-radius: 10px;
+  background-color: #526D82;
+  border: 0;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: white;
+  margin: 3vh 1vw 0 1vw;
+}
