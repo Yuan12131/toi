@@ -1,5 +1,17 @@
 .main{
   width: 100vw;
   height:100vh;
-  background-color: blanchedalmond;
+  padding-top: 10vh;
+  display: flex;
+  >button {
+    background-color: #ADC4CE;
+    color: white;
+    border: none;
+    width: 185px;
+    height: 55px;
+    border-radius: 5px;
+    margin-top: 3vh;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
 }
