@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import { Button } from "@mui/material";
+// import { Button } from "@mui/material";
 import CalendarSelector from "./Calender";
 import PlaceSelector from "./Place";
 import ThemeSelector from "./Theme";
+import styles from "@/styles/modalbar.module.scss"
 
 interface ModalBarProps {
   onSubmit: (data: {
@@ -108,27 +109,50 @@ const ModalBar: React.FC<ModalBarProps> = ({ onSubmit, isOpen, onClose }) => {
   };
 
   return (
-    <Modal isOpen={isOpen} contentLabel="여행 계획 설정">
-      <h2>여행 계획 설정 - 단계 {step}</h2>
-      <p>여행 계획을 세우기 위해 다음 정보를 입력해주세요.</p>
-      <Button variant="contained" onClick={handleClose}>
-        닫기
-      </Button>
+    <Modal isOpen={isOpen} contentLabel="여행 계획 설정" style={{
+      overlay: {
+        zIndex:'1001',
+        display:'flex',
+        flexDirection:'column',
+        alignItems:'center',
+      },
+      content: {
+        display:'flex',
+      marginTop:'5vh',
+        flexDirection:'column',
+        alignItems:'center',
+        justifyContent:'center',
+        background: '#fff',
+        overflow: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        borderRadius: '4px',
+        outline: 'none',
+        padding: '20px',
+        width:'70vw',
+        height:'80vh',
+        position:'relative'
+      }
+    }}>
+      <button className={styles.close} onClick={handleClose}>
+        X
+      </button>
+      <p className={styles.step}>STEP. {step}</p>
+      <p className={styles.title}>여행 계획을 위해 다음 정보를 입력해주세요</p>
       {renderStep()}
       <div>
         {step > 1 && (
-          <Button variant="contained" onClick={handlePreviousStep}>
+          <button className={styles.prev} onClick={handlePreviousStep}>
             이전
-          </Button>
+          </button>
         )}
         {step < 3 ? (
-          <Button variant="contained" onClick={handleNextStep}>
+          <button className={styles.next} onClick={handleNextStep}>
             다음
-          </Button>
+          </button>
         ) : (
-          <Button variant="contained" onClick={handleComplete}>
+          <button className={styles.submit} onClick={handleComplete}>
             완료
-          </Button>
+          </button>
         )}
       </div>
     </Modal>
