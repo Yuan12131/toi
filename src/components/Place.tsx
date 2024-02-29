@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import styles from "@/styles/place.module.scss"
 
 interface PlaceSelectorProps {
   selectedPlaces: any[];
@@ -15,28 +16,29 @@ const PlaceSelector: React.FC<PlaceSelectorProps> = ({selectedPlaces, setSelecte
     setValue(null);
   };
 
+  
+
   return (
-    <div>
+    <div className={styles.place}>
+      <h2>여행 장소</h2>
       <GooglePlacesAutocomplete
         apiKey="AIzaSyDpnJtXd385DDjiz4Ow0KFzAA05cUtd3nA"
         minLengthAutocomplete={2}
         autocompletionRequest={{ types: ["country", "locality"] }}
         selectProps={{
           onChange: handleSelect,
-          placeholder: "방문할 국가나 도시를 검색하세요",
+          className: styles.autocompleteInput,
+          placeholder: "여행 예정인 국가나 도시를 검색하세요",
           value
         }}
       />
 
       {selectedPlaces.length > 0 && (
-        <div>
-          <h2>선택된 도시 이름</h2>
           <ul>
             {selectedPlaces.map((place, index) => (
               <li key={index}>{place.label}</li>
             ))}
           </ul>
-        </div>
       )}
     </div>
   );
