@@ -1,0 +1,12 @@
+.calender{
+  display: flex;
+  >div{
+    text-align: center;
+    margin-right: 3vw;
+    >p:nth-child(3),p:nth-child(4){
+      margin-top: 5vh;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
+import "@/styles/calender.css";
+import styles from '@/styles/calender.module.scss'
 
 interface CalenderSelectorProps {
   startDate: Date | null;
@@ -51,15 +52,19 @@ const CalendarSelector: React.FC<CalenderSelectorProps> = ({
   };
 
   return (
-    <div>
+    <div className={styles.calender}>
       <Calendar
         value={currentDate}
         onChange={handleSelect}
         showNavigation={true}
         tileDisabled={tileDisabled}
-      />
-      {startDate && <p>시작일: {startDate.toLocaleDateString()}</p>}
-      {endDate && <p>종료일: {endDate.toLocaleDateString()}</p>}
+        />
+        <div>
+        <h2>여행 기간</h2>
+        <p>*기간은 최대 7일까지 선택할 수 있습니다</p>
+      {startDate && <p>여행 시작일 : {startDate.toLocaleDateString()}</p>}
+      {endDate && <p>여행 종료일 : {endDate.toLocaleDateString()}</p>}
+        </div>
     </div>
   );
 };
