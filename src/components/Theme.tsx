@@ -1,4 +1,5 @@
-import React from "react";
+import React, {useState} from "react";
+import styles from "@/styles/theme.module.scss"
 
 interface ThemeSelectorProps {
   selectedThemes: string;
@@ -29,14 +30,17 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({
 
   const handleThemeClick = (value: string) => {
     setSelectedThemes(value);
+    setIsActive(true);
   };
-
+  const [selectedTheme, setSelectedTheme] = useState("healing");
+  const [isActive, setIsActive] = useState(false);
+  
   return (
-    <div>
-      <h1>테마 선택:</h1>
+    <div className={styles.theme}>
+      <h2>여행 테마</h2>
       {themes.map((theme) => (
-        <div key={theme.id} onClick={() => handleThemeClick(theme.value)}>
-          <label htmlFor={theme.id}>{theme.label}</label>
+        <div className={isActive ? styles.active : ""} key={theme.id} onClick={() => handleThemeClick(theme.value)}>
+          <label className={isActive ? styles.active : ""} htmlFor={theme.id}>{theme.label}</label>
         </div>
       ))}
     </div>
