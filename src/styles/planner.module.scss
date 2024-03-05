@@ -1,17 +1,48 @@
-.main{
+.main {
   width: 100vw;
-  height:100vh;
+  height: 100%;
   padding-top: 10vh;
   display: flex;
-  >button {
+  flex-direction: column;
+  justify-content: center;
+
+  >div:nth-child(1) {
+    width: 100vw;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  >div>button {
     background-color: #ADC4CE;
     color: white;
     border: none;
-    width: 185px;
-    height: 55px;
+    width: 150px;
+    height: 45px;
     border-radius: 5px;
-    margin-top: 3vh;
-    font-size: 1.2rem;
+    font-size: 1rem;
     cursor: pointer;
+    margin: 3vw;
+  }
+
+  >div:nth-child(2) {
+    display: flex;
+
+    >div {
+      width: 30vw;
+      background-color: #F8F6F4;
+      margin: 1vw;
+      border-radius: 20px;
+      font-size: 1rem;
+      text-align: center;
+      li {
+      list-style: none;
+      padding: 1vw;
+      background-color: #E3F4F4;
+      border-radius: 20px;
+      margin: 0 1vw 2vw -1vw;
+      }
+    }
   }
 }
