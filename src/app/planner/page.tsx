@@ -1,36 +1,33 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, Suspense, useEffect } from "react";
 import ModalBar from "@/components/ModalBar";
-import styles from "@/styles/planner.module.scss"
+import styles from "@/styles/planner.module.scss";
+import Loading from "@/app/planner/Loading";
+import {Spinner} from "@nextui-org/spinner";
+import { SyncLoader } from "react-spinners";
 
-interface PlaceDetails {
-  formatted_address: string;
-  name: string;
-  photos: { photo_reference: string }[];
-}
-
-interface PlanResultItem {
-  date: string;
+interface ScheduleItem {
   time: string;
   place_name: string;
-  formatted_address: string;
-  name: string;
-  photo: string;
+  id?: number;
 }
+
+const apiKey = process.env.NEXT_PUBLIC_PLACE_API_KEY;
 
 const Planner = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [modalData, setModalData] = useState<any>(null);
   const [response, setResponse] = useState<any>(null);
   const [detailResult, setDetailResult] = useState<any>(null);
-
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleModalSubmit = async (data: any) => {
     setModalData(data);
   };
 
   const handleAskQuestion = async () => {
+    setLoading(true);
     if (!modalData) {
       alert("날짜, 장소, 테마를 선택한 후 확인할 수 있습니다.");
       return;
@@ -46,14 +43,16 @@ const Planner = () => {
       .join(", ");
 
     const question =
-      "다음 날짜, 여행지, 테마를 기반으로 첫날 일정부터 마지막날 일정까지 여행 일정을 짜서 JSON 형식으로 응답해주세요. 일정은 동선을 고려해서 일자마다 시간으로 나누어 최상위 객체를 날짜별 yyyy-mm-dd로 나누고, 배열 속 객체들로 이루어진 time, place_name으로 나타내주세요. 또한, place_name의 값은 실제로 존재하는 구글 플레이스에서 검색 가능한 장소의 공식 영문명이며, 구글 리뷰가 많거나 인기 있는 장소 중심이어야 합니다.";
+      "다음 날짜, 여행지, 테마를 기반으로 첫 날부터 마지막 날까지 여행 일정을 짜서 코드 블록을 제거하고, 실제 JSON 데이터만 응답, 일정은 동선을 고려해서 일자마다 시간으로 나누어 최상위 객체를 날짜인 yyyy-mm-dd로 나눌 것, 배열 속 객체들은 time, place_name으로 나타낼 것, place_name의 값은 구글에서 검색 가능한 실제로 존재하는 장소의 공식 명칭이며, 인기 있는 장소 중심일 것, 첫날부터 마지막날 일정까지 어떤 장소든 중복되어서는 안됩니다.";
 
     const combinedQuestion = `${question} 
-    시작일: ${startDate}, 종료일: ${endDate}, 
-    여행지: ${placesDescription}, 
-    테마: ${selectedThemes}`;
+    여행 시작일: ${startDate}, 여행 종료일: ${endDate}, 
+    여행 갈 도시 혹은 국가: ${placesDescription}, 
+    여행의 테마: ${selectedThemes}`;
 
     try {
+      setLoading(true);
+
       const formData = new FormData();
       formData.append("question", combinedQuestion);
       const apiResponse = await fetch("/api/ai", {
@@ -69,10 +68,18 @@ const Planner = () => {
       const { result } = await apiResponse.json();
 
       const parsedResult = JSON.parse(result);
-      const arrayResult = Object.entries(parsedResult);
-      setResponse(arrayResult);
+      const arrayResult: [string, ScheduleItem[]][] =
+        Object.entries(parsedResult);
 
-      console.log(arrayResult);
+      let currentId = 1;
+      arrayResult.forEach(([date, items]) => {
+        items.forEach((item) => {
+          item.id = currentId++;
+        });
+      });
+
+      setResponse(arrayResult);
+      console.log(arrayResult)
 
       const placeNames: string[] = [];
 
@@ -86,9 +93,10 @@ const Planner = () => {
           }
         }
       }
+      let detailId = 1;
 
       const placeDetails = await Promise.all(
-        placeNames.map(async (place_name) => {
+        placeNames.map(async (place_name, index) => {
           try {
             const response = await fetch(
               `/api/place-detail?placeName=${place_name}`,
@@ -103,21 +111,27 @@ const Planner = () => {
 
             const data = await response.json();
 
-            const resultData = data.map((item: any) => ({
-              name: item.result.name,
-              formatted_address: item.result.formatted_address,
-              photo:
-                item.result.photos && item.result.photos[0]?.photo_reference,
-            }));
+            const firstDetail = data[0];
 
+            const resultData = {
+              name: firstDetail?.result.name,
+              formatted_address: firstDetail?.result.formatted_address,
+              photo:
+                firstDetail?.result.photos &&
+                firstDetail.result.photos[0]?.photo_reference,
+              id: detailId + index,
+            };
             return resultData;
           } catch (error) {
             console.error("Error fetching place details data:", error);
           }
         })
       );
+
       setDetailResult(placeDetails);
-      console.log("Detail Result:", placeDetails);
+      console.log(placeDetails);
+
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -131,8 +145,6 @@ const Planner = () => {
     setIsOpen(false);
   };
 
-  const apiKey = process.env.PLACE_API_KEY;
-
   return (
     <div className={styles.main}>
       {isOpen && (
@@ -142,36 +154,56 @@ const Planner = () => {
           onClose={handleCloseModal}
         />
       )}
-      <button onClick={handleOpenModal}>여행 정보 입력하기</button>
-      <button onClick={handleAskQuestion}>여행 코스 확인하기</button>
-      {response &&
-  response.map((dateData: any, index: any) => (
-    <div key={index}>
-      <h2>{dateData[0]}</h2>
-      <ul>
-        {dateData[1].map((schedule: any, scheduleIndex: number) => (
-          <li key={scheduleIndex}>
-            {schedule.time} - {schedule.place_name}
-            {detailResult &&
-              detailResult[scheduleIndex] &&
-              detailResult[scheduleIndex].map((item: any, itemIndex: number) => (
-                <div key={itemIndex}>
-                  <p>{item.name}</p>
-                  <p>{item.formatted_address}</p>
-                  {item.photo && item.photo[0] && (
-                    <img
-                      src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photo_reference=${item.photo}&key=AIzaSyDpnJtXd385DDjiz4Ow0KFzAA05cUtd3nA`}
-                      alt="place"
-                    />
-                  )}
+      <div>
+        <button onClick={handleOpenModal}>여행 정보 입력하기</button>
+        <button onClick={handleAskQuestion}>여행 코스 확인하기</button>
+      </div>
+      <Suspense fallback={<Loading />}>
+  {loading ? (
+    <Loading />
+  ) : (
+    response && detailResult && (
+          <div>
+            {response &&
+              response.map((dateData: any, index: any) => (
+                <div key={index}>
+                  <h2>DAY{index + 1}</h2>
+                  <h3>{dateData[0]}</h3>
+                  <ul>
+                    {dateData[1].map((schedule: any, scheduleIndex: number) => {
+                      const matchingDetail =
+                        detailResult &&
+                        detailResult.find(
+                          (detail: any) => detail.id === schedule.id
+                        );
+
+                      return (
+                        <li key={scheduleIndex}>
+                          <div>{schedule.time}</div>
+                          <div>
+                            {matchingDetail && (
+                              <>
+                                <p>장소 : {schedule.place_name}</p>
+                                <p>주소 : {matchingDetail.formatted_address}</p>
+                                {matchingDetail.photo && (
+                                  <img
+                                    src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photo_reference=${matchingDetail.photo}&key=${apiKey}`}
+                                    alt="place"
+                                  />
+                                )}
+                              </>
+                            )}
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
               ))}
-          </li>
-        ))}
-      </ul>
-    </div>
-  ))}
-
+          </div>
+    )
+        )}
+      </Suspense>
     </div>
   );
 };
