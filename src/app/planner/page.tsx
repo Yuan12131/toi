@@ -3,9 +3,7 @@
 import React, { useState, Suspense, useEffect } from "react";
 import ModalBar from "@/components/ModalBar";
 import styles from "@/styles/planner.module.scss";
-import Loading from "@/app/planner/Loading";
-import {Spinner} from "@nextui-org/spinner";
-import { SyncLoader } from "react-spinners";
+import Loading from "@/components/Loading";
 
 interface ScheduleItem {
   time: string;
