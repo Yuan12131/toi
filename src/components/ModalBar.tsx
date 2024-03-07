@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-// import { Button } from "@mui/material";
 import CalendarSelector from "./Calender";
 import PlaceSelector from "./Place";
 import ThemeSelector from "./Theme";
@@ -27,7 +26,7 @@ const ModalBar: React.FC<ModalBarProps> = ({ onSubmit, isOpen, onClose }) => {
   const handleComplete = () => {
     if (step === 3 && selectedThemes === "") {
       alert("테마를 선택해주세요.");
-      return; // Don't proceed further if the theme is not selected
+      return;
     }
     onClose();
     onSubmit({
