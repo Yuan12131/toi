@@ -9,22 +9,49 @@
   z-index: 1000;
 
   >div:nth-child(1) {
-    width: 80vw;
+    width: 60vw;
     justify-content: flex-start;
     display: flex;
-    font-size: 2rem;
-    padding-left: 10vw;
-    >a{
+    font-size: 2.3rem;
+    font-weight: 900;
+    margin-left: 5vw;
+
+    >a {
       color: #96B6C5;
       text-decoration: none;
     }
   }
 
   >div:nth-child(2) {
-    width: 20vw;
-    >a{
+    width: 30vw;
+    height: 10vh;
+    line-height: 5vh;
+    text-align: center;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    a,
+    button {
       text-decoration: none;
-      color: black;
+      color: white;
+      margin-left: 1vw;
+      width: 90px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #ADC4CE;
+      cursor: pointer;
+      text-decoration: none;
+      border-radius: 5px;
+      border: 0;
+
+      &:hover {
+        background-color: #27374D;
+      }
     }
+
   }
 }
