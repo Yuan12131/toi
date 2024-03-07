@@ -1,26 +1,44 @@
-/* eslint-disable @next/next/no-img-element */
-"use client"
+"use client";
 
 import styles from "../styles/home.module.scss";
 import Link from "next/link";
 import Slick from "react-slick";
 import React, { useState } from "react";
-
+import Image from "next/image";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 export default function Home() {
   const [images] = useState([
-    { src: "image2.jpg", alt: "Image 1", theme:"자연 테마", detail:"숲, 산, 해변, 강 등 자연 경관을 탐험하는 여행" },
-    { src: "image3.jpg", alt: "Image 2", theme:"도시 탐험 테마", detail:"도심 중심의 거리, 지역 시장, 쇼핑몰 등 도시의 다양한 즐길 거리가 중심" },
-    { src: "image1.jpg", alt: "Image 3", theme:"역사와 문화 테마", detail:"성, 궁전, 사원, 박물관 등 역사적인 명소를 방문하며 지역 문화 체험" },
+    {
+      src: "/image2.jpg",
+      alt: "Image 1",
+      theme: "자연 테마",
+      detail: "숲, 산, 해변, 강 등 자연 경관을 탐험하는 여행",
+    },
+    {
+      src: "/image3.jpg",
+      alt: "Image 2",
+      theme: "도시 탐험 테마",
+      detail:
+        "도심 중심의 거리, 지역 시장, 쇼핑몰 등 도시의 다양한 즐길 거리가 중심",
+    },
+    {
+      src: "/image1.jpg",
+      alt: "Image 3",
+      theme: "역사와 문화 테마",
+      detail:
+        "성, 궁전, 사원, 박물관 등 역사적인 명소를 방문하며 지역 문화 체험",
+    },
   ]);
 
   const settings = {
-    dots: false,
     infinite: true,
-    autoplay: false,
+    dots : true,
+    draggable : true,
+    autoplay : true,
+    autoplaySpeed : 5000,
   };
 
   return (
@@ -36,16 +54,24 @@ export default function Home() {
         </div>
       </div>
       <div>
-      <Slick {...settings}>
-        {images.map((image: any) => (
-          <div className={styles.slider} key={image.src}>
-            <img src={image.src} alt={image.alt} style={{ width: '50vw', height: '50vh', marginLeft:'10vw' }} />
-            <div>{image.theme}</div>
-            <div>{image.detail}</div>
-
-          </div>
-        ))}
-      </Slick>
+        <Slick {...settings}>
+          {images.map((image: any) => (
+            <div className={styles.slider} key={image.src}>
+              <Image
+                src={image.src}
+                alt={image.alt}
+                width={600}
+                height={400}
+                style={{
+                  marginLeft: "10vw",
+                  borderRadius: "10px",
+                }}
+              />
+              <div>{image.theme}</div>
+              <div>{image.detail}</div>
+            </div>
+          ))}
+        </Slick>
       </div>
       <div>
         <div>TOUI</div>
