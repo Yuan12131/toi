@@ -1,0 +1,24 @@
+.main{
+    width:100vw;
+    height:100vh;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-wrap: wrap;
+  }
+  .top{
+    display:flex;
+    width:100vw;
+    height:14vh;
+  }
+  .side{
+    width: 13vw;
+    height: 86vh;
+    justify-content: center;
+    align-items: center;
+    background-color: #b6c4b610;
+  }
+  .content{
+    width:87vw;
+    height:86vh;
+  }
