@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { pool, connectDB, closeDB } from "@/utills/db";
+import { pool, connectDB, closeDB } from "@/utils/db";
 import jwt from "jsonwebtoken";
 
-const secretKey = "nts9604";
+const secretKey = "yuan";
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     try {
@@ -14,9 +14,11 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
         ]);
 
         if (rows) {
-            if (password === rows.password) {
-            // 로그인 성공
-            const token = jwt.sign(
+            if (rows.isWithdrawn === 1) {
+                res.status(401).json({ error: "withdraw user" });
+            } else if (password === rows.password) {
+
+                const token = jwt.sign(
                 {
                 User_Index: rows.User_Index,
                 userId: rows.userId,
@@ -30,7 +32,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
                 gender: rows.gender,
                 },
                 secretKey,
-                { expiresIn: "1h" }
+                { expiresIn: "3h" }
             );
 
             const verified = jwt.verify(token, secretKey);

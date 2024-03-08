@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { pool, connectDB, closeDB } from "@/utills/db";
+import { pool, connectDB, closeDB } from "@/utils/db";
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   connectDB()
