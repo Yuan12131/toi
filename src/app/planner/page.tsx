@@ -19,10 +19,15 @@ const Planner = () => {
   const [response, setResponse] = useState<any>(null);
   const [detailResult, setDetailResult] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
-
+  const [token, setToken] = useState<string | null>(null);
   const handleModalSubmit = async (data: any) => {
     setModalData(data);
   };
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken);
+  }, []);
 
   const handleAskQuestion = async () => {
     setLoading(true);
@@ -77,7 +82,7 @@ const Planner = () => {
       });
 
       setResponse(arrayResult);
-      console.log(arrayResult)
+      console.log(arrayResult);
 
       const placeNames: string[] = [];
 
@@ -143,6 +148,59 @@ const Planner = () => {
     setIsOpen(false);
   };
 
+  const handleSave = async () => {
+    try {
+      if (!token) {
+        alert("로그인 후 이용해주세요");
+        return;
+      }
+
+      if (!response || !detailResult) {
+        alert("먼저 여행 코스를 확인해주세요");
+        return;
+      }
+
+      const travelPlans = response
+        .map((dateData: any, index: any) => {
+          const day = index + 1;
+          const date = dateData[0];
+
+          return dateData[1].map((schedule: any) => {
+            const matchingDetail = detailResult.find(
+              (detail: any) => detail.id === schedule.id
+            );
+
+            return {
+              day,
+              date,
+              time: schedule.time,
+              place_name: schedule.place_name,
+              formatted_address: matchingDetail.formatted_address,
+              photo: matchingDetail.photo,
+            };
+          });
+        })
+        .flat();
+
+      const saveResponse = await fetch("/api/save-plans", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(travelPlans),
+      });
+
+      if (saveResponse.ok) {
+        console.log("여행 일정 저장 성공!");
+      } else {
+        console.error("여행 일정 저장 실패:", saveResponse.statusText);
+      }
+    } catch (error) {
+      console.error("오류 발생:", error);
+    }
+  };
+
   return (
     <div className={styles.main}>
       {isOpen && (
@@ -155,51 +213,57 @@ const Planner = () => {
       <div>
         <button onClick={handleOpenModal}>여행 정보 입력하기</button>
         <button onClick={handleAskQuestion}>여행 코스 확인하기</button>
+        <button onClick={handleSave}>여행 코스 저장하기</button>
       </div>
       <Suspense fallback={<Loading />}>
-  {loading ? (
-    <Loading />
-  ) : (
-    response && detailResult && (
-          <div>
-            {response &&
-              response.map((dateData: any, index: any) => (
-                <div key={index}>
-                  <h2>DAY{index + 1}</h2>
-                  <h3>{dateData[0]}</h3>
-                  <ul>
-                    {dateData[1].map((schedule: any, scheduleIndex: number) => {
-                      const matchingDetail =
-                        detailResult &&
-                        detailResult.find(
-                          (detail: any) => detail.id === schedule.id
-                        );
+        {loading ? (
+          <Loading />
+        ) : (
+          response &&
+          detailResult && (
+            <div>
+              {response &&
+                response.map((dateData: any, index: any) => (
+                  <div key={index}>
+                    <h2>DAY{index + 1}</h2>
+                    <h3>{dateData[0]}</h3>
+                    <ul>
+                      {dateData[1].map(
+                        (schedule: any, scheduleIndex: number) => {
+                          const matchingDetail =
+                            detailResult &&
+                            detailResult.find(
+                              (detail: any) => detail.id === schedule.id
+                            );
 
-                      return (
-                        <li key={scheduleIndex}>
-                          <div>{schedule.time}</div>
-                          <div>
-                            {matchingDetail && (
-                              <>
-                                <p>장소 : {schedule.place_name}</p>
-                                <p>주소 : {matchingDetail.formatted_address}</p>
-                                {matchingDetail.photo && (
-                                  <img
-                                    src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photo_reference=${matchingDetail.photo}&key=${apiKey}`}
-                                    alt="place"
-                                  />
+                          return (
+                            <li key={scheduleIndex}>
+                              <div>{schedule.time}</div>
+                              <div>
+                                {matchingDetail && (
+                                  <>
+                                    <p>장소 : {schedule.place_name}</p>
+                                    <p>
+                                      주소 : {matchingDetail.formatted_address}
+                                    </p>
+                                    {matchingDetail.photo && (
+                                      <img
+                                        src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photo_reference=${matchingDetail.photo}&key=${apiKey}`}
+                                        alt="place"
+                                      />
+                                    )}
+                                  </>
                                 )}
-                              </>
-                            )}
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              ))}
-          </div>
-    )
+                              </div>
+                            </li>
+                          );
+                        }
+                      )}
+                    </ul>
+                  </div>
+                ))}
+            </div>
+          )
         )}
       </Suspense>
     </div>
