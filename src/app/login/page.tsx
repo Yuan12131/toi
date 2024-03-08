@@ -6,120 +6,112 @@ import UserPasswordModal from "@/components/FindPw";
 import Link from "next/link";
 
 const Login: React.FC = () => {
-    const [userId, setUserId] = useState("");
-    const [password, setPassword] = useState("");
-    const [showUsernameModal, setShowUsernameModal] = useState(false);
-    const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
+  const [showUsernameModal, setShowUsernameModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
-    const handleLogin = async () => {
+  const handleLogin = async () => {
     try {
-        const response = await fetch("/api/login", {
+      const response = await fetch("/api/login", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ userId, password }),
-        });
+      });
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (response.ok) {
+      if (response.ok) {
         const { token, name } = data;
         localStorage.setItem("token", token);
         console.log("로그인 성공");
-
         window.location.href = "/";
-        } else {
+      } else if (response.status === 401) {
+        alert("탈퇴한 사용자입니다.");
+      } else {
         alert("아이디나 비밀번호를 확인하고 다시 시도해주세요.");
         console.error("로그인 실패:", data.error);
-        }
+      }
     } catch (error) {
-        console.error("서버 에러:", error);
+      console.error("서버 에러:", error);
     }
-    };
+  };
 
-    const handleOpenUsernameModal = () => {
+  const handleOpenUsernameModal = () => {
     setShowUsernameModal(true);
-    };
+  };
 
-    const handleCloseUsernameModal = () => {
+  const handleCloseUsernameModal = () => {
     setShowUsernameModal(false);
-    };
+  };
 
-    const handleOpenPasswordModal = () => {
+  const handleOpenPasswordModal = () => {
     setShowPasswordModal(true);
-    };
+  };
 
-    const handleClosePasswordModal = () => {
+  const handleClosePasswordModal = () => {
     setShowPasswordModal(false);
-    };
+  };
 
-    return (
+  return (
     <div className={styles.main}>
-        <div>
+      <div>
         <h2>LOGIN</h2>
         <form>
-            <label>
+          <label>
             <input
-                type="text"
-                value={userId}
-                placeholder="아이디를 입력하세요"
-                onChange={(e) => setUserId(e.target.value)}
+              type="text"
+              value={userId}
+              placeholder="아이디를 입력하세요"
+              onChange={(e) => setUserId(e.target.value)}
             />
-            </label>
-            <label>
+          </label>
+          <label>
             <input
-                type="password"
-                value={password}
-                placeholder="비밀번호를 입력하세요"
-                onChange={(e) => setPassword(e.target.value)}
+              type="password"
+              value={password}
+              placeholder="비밀번호를 입력하세요"
+              onChange={(e) => setPassword(e.target.value)}
             />
-            </label>
-            <div>
-            <button
-                type="button"
-                onClick={handleLogin}
-            >
-                로그인
+          </label>
+          <div>
+            <button type="button" onClick={handleLogin}>
+              로그인
             </button>
 
             <button type="button">
-                <Link href={`/signup`}>회원가입</Link>
+              <Link href={`/signup`}>회원가입</Link>
             </button>
-            </div>
+          </div>
         </form>
         <div>
-            <button
-            type="button"
-            onClick={handleOpenUsernameModal}
-            >
+          <button type="button" onClick={handleOpenUsernameModal}>
             아이디 찾기
-            </button>
-            <button
-            type="button"
-            onClick={handleOpenPasswordModal}
-            >
+          </button>
+          <button type="button" onClick={handleOpenPasswordModal}>
             비밀번호 찾기
-            </button>
+          </button>
         </div>
         {showUsernameModal && (
-            <div className="modal">
+          <div className="modal">
             <div className="modal-content">
-                <UsernameModal onClose={handleCloseUsernameModal} />
+              <UsernameModal onClose={handleCloseUsernameModal} />
             </div>
-            </div>
+          </div>
         )}
 
         {showPasswordModal && (
-            <div className="modal">
-                <div className="modal-content">
-                    <UserPasswordModal onClose={handleClosePasswordModal} />
-                </div>
+          <div className="modal">
+            <div className="modal-content">
+              <UserPasswordModal onClose={handleClosePasswordModal} />
             </div>
+          </div>
         )}
+      </div>
     </div>
-    </div>
-    );
+  );
 };
 
 export default Login;
