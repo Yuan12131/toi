@@ -1,0 +1,58 @@
+.myinfo{
+    display: flex;
+    flex-direction: column;
+    width:100vw;
+    height:50vh;
+    align-items: center;
+    margin-top:10vh;
+  }
+  
+  .userinfo {
+    border-collapse: collapse;
+    width: 60vw;
+    margin-top:10vh;
+  }
+  
+  .userinfo td, .userinfo th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    height: 7vh;
+    line-height: 4vh;
+  }
+  
+  .userinfo th {
+    background-color: #E3F4F4;
+  }
+  
+  .item{
+    width:10vw;
+    display:flex;
+    justify-content: center;
+    background-color: rgb(247, 245, 245);
+    font-size: 1rem;
+    font-weight: 800;
+  }
+  .info{
+    width:55vw;
+    font-size: 1rem;
+  }
+  
+  .btn {
+    text-align: center;
+    width: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    color:white;
+    cursor: pointer;
+    margin: 20px 10px 0 0;
+    height: 35px;
+    text-align:center;
+    border: none;
+    border-radius: 5px;
+    background-color: #526D82;
+    &:hover {
+        background-color: #27374D;
+  }
+  
+  }
