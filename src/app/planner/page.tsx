@@ -193,6 +193,7 @@ const Planner = () => {
 
       if (saveResponse.ok) {
         console.log("여행 일정 저장 성공!");
+        alert("저장되었습니다.")
       } else {
         console.error("여행 일정 저장 실패:", saveResponse.statusText);
       }
