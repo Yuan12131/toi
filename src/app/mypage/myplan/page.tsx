@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "@/styles/myplan.module.scss";
-import { select } from "@nextui-org/react";
+import { Select } from "@nextui-org/select";
+
 
 interface DataItem {
   courseIndex: string;
@@ -88,6 +89,16 @@ export default function MyPagesub() {
     }
   };
 
+  const formatDate = (date: string) => {
+    const formattedDate = new Date(date);
+    return `${formattedDate.getFullYear()}년 ${formattedDate.getMonth() + 1}월 ${formattedDate.getDate()}일`;
+  };
+  
+  const formatTime = (time: string) => {
+    const formattedTime = new Date(`2000-01-01T${time}`);
+    return `${formattedTime.getHours()}시`;
+  };
+
   return (
     <div className={styles.main}>
       <div>
@@ -96,7 +107,7 @@ export default function MyPagesub() {
           onChange={(e) => setSelectedCourse(e.target.value)}
           style={{ width: "200px", marginBottom: "20px" }}
         >
-          <option value="">-- Select Course --</option>
+          <option value="">저장된 여행코스 리스트</option>
           {courseOptions.map((option, index) => (
             <option key={index} value={option}>
               {option}
@@ -106,7 +117,6 @@ export default function MyPagesub() {
 
         {selectedCourse !== "" && (
           <>
-            <h2>Plan for Course: {selectedCourse}</h2>
             <div>
               {planData[parseInt(selectedCourse)]
                 .reduce((acc: any, event: DataItem, index: number) => {
@@ -121,19 +131,20 @@ export default function MyPagesub() {
                 }, [])
                 .map((group: DataItem[], groupIndex: number) => (
                   <div key={groupIndex} className={styles.plan}>
-                    <h3>Group {groupIndex + 1}</h3>
+                    <h3>DAY {groupIndex + 1}</h3>
                     {group.map((event: DataItem, eventIndex: number) => (
                       <div key={eventIndex}>
-                        <p>Date: {event.date}</p>
-                        <p>Time: {event.time}</p>
-                        <p>Place: {event.place_name}</p>
+                        {eventIndex === 0 && <p>날짜 : {formatDate(event.date)}</p>}
+                        <p>시간 : {formatTime(event.time)}</p>
+                        <p>장소 : {event.place_name}</p>
                         {event.formatted_address && (
-                          <p>Address: {event.formatted_address}</p>
+                          <p>주소: {event.formatted_address}</p>
                         )}
                         {event.photo && (
                           <img
                             src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photo_reference=${event.photo}&key=${apiKey}`}
                             alt="Place photo"
+                            style={{ borderRadius: "10px"}}
                           />
                         )}
                       </div>
