@@ -35,7 +35,7 @@ export default function Home() {
 
   const settings = {
     infinite: true,
-    dots : true,
+    dots : false,
     draggable : true,
     autoplay : true,
     autoplaySpeed : 5000,
@@ -47,10 +47,13 @@ export default function Home() {
         <div>
           <div>
             너 P야? <br></br>AI가 짜주는 여행 코스
-          </div>
           <Link href={"/planner"}>
             <button>지금 바로 시작</button>
           </Link>
+          </div>
+            <Image src="/banner.GIF" alt="banner" width={500}
+                height={300}>
+            </Image>
         </div>
       </div>
       <div>
