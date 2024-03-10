@@ -1,0 +1,51 @@
+.main {
+  width: 91vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  >div:nth-child(1)>select{
+    width: 30vw;
+    height: 5vh;
+    border: 1px solid black;
+    border-radius: 10px;
+    text-align: center;
+    background-color: rgb(249, 245, 238);
+  }
+
+  >div {
+    width: 80vw;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f1ece974;
+    border-radius: 10px;
+    padding: 3vw;
+    margin-top: 15vh;
+
+    >div {
+      display: flex;
+      width: 85vw;
+      height: 65vh;
+      flex-wrap: wrap;
+      overflow: auto;
+      justify-content: center;
+    }
+  }
+}
+
+.plan {
+  width: 25vw;
+  background-color: #eaeef2;
+  border: 2px solid #c6d8e9;
+  margin: 1vw;
+  border-radius: 20px;
+  font-size: 1rem;
+  text-align: center;
+  padding: 20px;
+  >div>p:nth-child(1){
+    margin-top: 5vh;
+  }
+}
