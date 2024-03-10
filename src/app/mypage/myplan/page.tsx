@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "@/styles/myplan.module.scss";
-import { Select } from "@nextui-org/select";
 
 
 interface DataItem {
