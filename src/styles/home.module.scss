@@ -7,7 +7,6 @@
   position: relative;
   height: 80vh;
   background-color: white;
-
   >div {
     padding: 30vh 0 0 10vw;
     width: 50vw;
@@ -15,18 +14,36 @@
     font-size: 3rem;
     font-weight: 700;
 
-    >a>button {
-      background-color: #ADC4CE;
-      color: white;
-      border: none;
-      width: 185px;
-      height: 55px;
-      border-radius: 5px;
-      margin-top: 3vh;
-      font-size: 1.2rem;
-      cursor: pointer;
+
+  }
+  >div:nth-child(1) {
+    display: flex;
+    width: 100vw;
+
+    >div {
+      width: 50vw;
+      display: flex;
+      flex-direction: column;
+      >a>button {
+        background-color: #ADC4CE;
+        color: white;
+        border: none;
+        width: 185px;
+        height: 55px;
+        border-radius: 5px;
+        margin-top: 3vh;
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+    }
+
+    >img {
+      width: 40vw;
+      margin-right: 10vw;
     }
   }
+
+
 }
 
 .main>div:nth-child(2) {
@@ -38,23 +55,26 @@
   align-items: center;
   justify-content: center;
 
-  >div{
+  >div {
     width: 95vw;
-    height:50vh;
+    height: 50vh;
   }
 }
 
-.slider>div:nth-child(2), .slider>div:nth-child(3){
-  width:25vw;
+.slider>div:nth-child(2),
+.slider>div:nth-child(3) {
+  width: 25vw;
   position: relative;
-  bottom:40vh;
+  bottom: 40vh;
   right: 30vw;
 }
-.slider>div:nth-child(2){
+
+.slider>div:nth-child(2) {
   font-size: 2rem;
   font-weight: bold;
 }
-.slider>div:nth-child(3){
+
+.slider>div:nth-child(3) {
   font-size: 1.1rem;
   margin-top: 5vh;
 }
@@ -83,5 +103,5 @@
       font-size: 0.7rem;
       padding-left: 30vw;
     }
-}
+  }
 }
