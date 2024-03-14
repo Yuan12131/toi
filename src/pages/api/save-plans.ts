@@ -1,9 +1,9 @@
-import { pool, connectDB, closeDB } from "@/utils/db";
+import { pool, closeDB, connectDB } from "@/utils/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import { v4 } from "uuid";
 
-const secretKey = "nts9604";
+const secretKey = "yuan";
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
@@ -15,6 +15,8 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   if (!token) {
     return res.status(401).json({ error: "Authorization token required" });
   }
+
+  await connectDB()
 
   try {
     const decodedToken = await verifyToken(token);
@@ -50,7 +52,9 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   } catch (error) {
     console.error("Error verifying token:", error);
     res.status(401).json({ error: "Invalid or expired token" });
-  }
+  }finally {
+    closeDB(); // Connection should be released after using
+}
 }
 
 async function verifyToken(token: string) {
@@ -59,5 +63,5 @@ async function verifyToken(token: string) {
     return decoded;
   } catch (error) {
     throw error;
-  }
+  } 
 }
