@@ -1,10 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { pool, connectDB, closeDB } from "@/utils/db";
+import { pool, closeDB, connectDB } from "@/utils/db";
 import jwt from "jsonwebtoken";
 
 const secretKey = "yuan";
 
 export default async function PUT(req: NextApiRequest, res: NextApiResponse) {
+  connectDB()
     try {
       if (req.method === "PUT") {
         // 인증된 사용자인지 확인
@@ -80,5 +81,7 @@ export default async function PUT(req: NextApiRequest, res: NextApiResponse) {
     } catch (error) {
       console.error("Error updating user info:", error);
       res.status(500).json({ error: "Internal Server Error" });
-    }
+    } finally {
+      closeDB(); // Connection should be released after using
+  }
   };
