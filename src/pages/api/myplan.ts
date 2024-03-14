@@ -1,10 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { pool, connectDB, closeDB } from "@/utils/db";
+import { pool, closeDB, connectDB } from "@/utils/db";
 import jwt from "jsonwebtoken";
 
 const secretKey = "yuan";
 
 export default async function GET(req: NextApiRequest, res: NextApiResponse) {
+  connectDB()
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
 
@@ -30,5 +31,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
   } catch (error) {
     console.error("Error fetching subscription data:", error);
     res.status(500).json({ error: "Internal Server Error" });
-  }
+  } finally {
+    closeDB(); // Connection should be released after using
+}
 }
