@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { pool, connectDB, closeDB } from "@/utils/db";
+import { pool, closeDB, connectDB } from "@/utils/db";
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   connectDB()
@@ -44,5 +44,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "서버 에러" });
-    }
+    } finally {
+      closeDB(); // Connection should be released after using
+  }
   };
