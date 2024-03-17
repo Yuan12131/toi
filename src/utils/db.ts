@@ -7,7 +7,7 @@ export const pool = mariadb.createPool({
   user: 'root',
   password: password,
   database: "toui",
-  connectionLimit: 25,
+  connectionLimit: 10,
 });
 
 
