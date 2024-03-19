@@ -1,15 +1,11 @@
 "use client";
 import styles from "@/styles/login.module.scss";
 import React, { useState } from "react";
-import UsernameModal from "@/components/FindId";
-import UserPasswordModal from "@/components/FindPw";
 import Link from "next/link";
 
 const Login: React.FC = () => {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
-  const [showUsernameModal, setShowUsernameModal] = useState(false);
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   const handleLogin = async () => {
     try {
@@ -37,22 +33,6 @@ const Login: React.FC = () => {
     } catch (error) {
       console.error("서버 에러:", error);
     }
-  };
-
-  const handleOpenUsernameModal = () => {
-    setShowUsernameModal(true);
-  };
-
-  const handleCloseUsernameModal = () => {
-    setShowUsernameModal(false);
-  };
-
-  const handleOpenPasswordModal = () => {
-    setShowPasswordModal(true);
-  };
-
-  const handleClosePasswordModal = () => {
-    setShowPasswordModal(false);
   };
 
   return (
@@ -86,29 +66,6 @@ const Login: React.FC = () => {
             </button>
           </div>
         </form>
-        <div>
-          <button type="button" onClick={handleOpenUsernameModal}>
-            아이디 찾기
-          </button>
-          <button type="button" onClick={handleOpenPasswordModal}>
-            비밀번호 찾기
-          </button>
-        </div>
-        {showUsernameModal && (
-          <div className="modal">
-            <div className="modal-content">
-              <UsernameModal onClose={handleCloseUsernameModal} />
-            </div>
-          </div>
-        )}
-
-        {showPasswordModal && (
-          <div className="modal">
-            <div className="modal-content">
-              <UserPasswordModal onClose={handleClosePasswordModal} />
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
