@@ -1,11 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { pool, closeDB, connectDB } from "@/utils/db";
+import { connectDB, getDB, closeDB } from "@/utils/mongodb";
+const { ObjectId } = require("mongodb");
 import jwt from "jsonwebtoken";
 
-const secretKey = "yuan";
+const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY;
 
 export default async function GET(req: NextApiRequest, res: NextApiResponse) {
-  connectDB()
+  await connectDB();
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
 
@@ -17,21 +18,25 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
     if (!decodedToken) {
       console.error("jwt malformed");
     }
-    const userIndex = decodedToken.User_Index;
-    const TravelPlans = await pool.query(
-      "SELECT courseIndex, day, date, time, place_name, formatted_address, photo, timestamp FROM TravelPlans WHERE User_Index = ? AND status = 0",
-      [userIndex]
-    );
+    const User_Index = decodedToken.User_Index;
+    const userIndex = new ObjectId(User_Index);
 
-    if (TravelPlans) {
+    const db = getDB();
+    const travelPlansCollection = db.collection("TravelPlans");
+
+    const TravelPlans = await travelPlansCollection
+      .find({ userIndex: userIndex }).toArray();
+
       res.status(200).json({ TravelPlans });
-    } else {
-      res.status(404).json({ error: "TravelPlans를 찾을 수 없습니다." });
-    }
+
+      if (!TravelPlans) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
   } catch (error) {
     console.error("Error fetching subscription data:", error);
     res.status(500).json({ error: "Internal Server Error" });
   } finally {
     closeDB(); // Connection should be released after using
-}
+  }
 }
