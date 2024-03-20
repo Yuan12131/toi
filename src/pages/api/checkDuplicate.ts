@@ -1,16 +1,18 @@
-import { pool, connectDB, closeDB } from "@/utils/db";
+import { connectDB, getDB, closeDB } from "@/utils/mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
-    connectDB()
+  await connectDB();
   try {
     const { userId } = req.query;
 
-    const [rows] = await pool.query("SELECT * FROM Users WHERE userId = ?", [
-      userId,
-    ]);
+    const db = getDB(); // MongoDB 데이터베이스 가져오기
 
-    if (rows) {
+    const usersCollection = db.collection("users"); // "users" 컬렉션 선택
+
+    const user = await usersCollection.findOne({ userId }); // userId로 사용자 조회
+
+    if (user) {
       res.json({ isDuplicate: true });
     } else {
       res.json({ isDuplicate: false });
@@ -19,6 +21,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     console.error("Error checking duplicate:", error);
     res.status(500).json({ error: "Internal Server Error" });
   } finally {
-    closeDB(); // Connection should be released after using
+    await closeDB(); // Connection should be released after using
   }
 }
