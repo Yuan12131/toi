@@ -52,7 +52,7 @@ export default function Home() {
           </Link>
           </div>
             <Image src="/banner.GIF" alt="banner" width={500}
-                height={300}>
+                height={300} unoptimized>
             </Image>
         </div>
       </div>

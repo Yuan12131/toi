@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { NextRequest, NextResponse } from 'next/server';
 
+
 const apiKey = process.env.NEXT_PUBLIC_AI_API_KEY;
 const organizationId = process.env.NEXT_PUBLIC_ORGANIZATION;
 
