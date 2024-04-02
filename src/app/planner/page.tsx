@@ -212,7 +212,7 @@ const Planner = () => {
         />
       )}
       <div>
-        <button onClick={handleOpenModal}>여행 정보 입력하기</button>
+        {/* <button onClick={handleOpenModal}>여행 정보 다시 입력하기</button> */}
         <button onClick={handleAskQuestion}>여행 코스 확인하기</button>
         <button onClick={handleSave}>여행 코스 저장하기</button>
       </div>
