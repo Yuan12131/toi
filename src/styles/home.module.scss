@@ -28,12 +28,15 @@
         background-color: #ADC4CE;
         color: white;
         border: none;
-        width: 185px;
-        height: 55px;
+        width: 17vw;
+        height: 10vh;
         border-radius: 5px;
-        margin-top: 3vh;
-        font-size: 1.2rem;
+        margin-top: 4vh;
+        font-size: 1.7rem;
         cursor: pointer;
+        &:hover{
+          background-color: #27374D;
+        }
       }
     }
 
